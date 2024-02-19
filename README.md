@@ -1,5 +1,5 @@
 <!-- Update the title -->
-# Terraform Modules Template Project
+# IBM Cloud Core Security Services Deployable Architecture
 
 <!--
 Update status and "latest release" badges:
@@ -13,7 +13,7 @@ Update status and "latest release" badges:
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 
 <!-- Add a description of module(s) in this repo -->
-TODO: Replace me with description of the module(s) in this repo
+A Terraform module for provisioning IBM Cloud core Security services required to protect other IBM Cloud Instrastrucute and services.
 
 
 <!-- Below content is automatically populated via pre-commit hook -->
@@ -37,7 +37,7 @@ https://terraform-ibm-modules.github.io/documentation/#/implementation-guideline
 
 
 <!-- This heading should always match the name of the root level module (aka the repo name) -->
-## terraform-ibm-base-security-services-da
+## terraform-ibm-module-template
 
 ### Usage
 
@@ -49,7 +49,9 @@ unless real values don't help users know what to change.
 -->
 
 ```hcl
-
+module "terraform_ibm_core_sercurity_services_da" {
+    kp_instance_name    = "default-keyprotect-instance"
+}
 ```
 
 ### Required IAM access policies
@@ -62,17 +64,15 @@ information in the console at
 Manage > Access (IAM) > Access groups > Access policies.
 -->
 
-<!--
 You need the following permissions to run this module.
 
 - Account Management
-    - **Sample Account Service** service
+    - **Resource Group** service
+        - `Viewer` platform access
+- IAM Services
+    - **Key Protect** service
         - `Editor` platform access
         - `Manager` service access
-    - IAM Services
-        - **Sample Cloud Service** service
-            - `Administrator` platform access
--->
 
 <!-- NO PERMISSIONS FOR MODULE
 If no permissions are required for the module, uncomment the following
@@ -88,11 +88,16 @@ statement instead the previous block.
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3.0, <1.6.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3.0 |
+| <a name="requirement_ibm"></a> [ibm](#requirement\_ibm) | >=1.59.0 |
 
 ### Modules
 
-No modules.
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_kp"></a> [kp](#module\_kp) | ./keyprotect/keyprotect_instance | n/a |
+| <a name="module_kp_crk"></a> [kp\_crk](#module\_kp\_crk) | ./keyprotect/keyprotect_key | n/a |
+| <a name="module_resource_group"></a> [resource\_group](#module\_resource\_group) | terraform-ibm-modules/resource-group/ibm | 1.1.4 |
 
 ### Resources
 
@@ -100,11 +105,28 @@ No resources.
 
 ### Inputs
 
-No inputs.
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_create_crk"></a> [create\_crk](#input\_create\_crk) | Set to `true` to create Key Protect customer root key. | `bool` | `true` | no |
+| <a name="input_create_kp"></a> [create\_kp](#input\_create\_kp) | Set to `true` to create Key Protect instance. | `bool` | `true` | no |
+| <a name="input_crk_name"></a> [crk\_name](#input\_crk\_name) | The name of the customer root key. | `string` | `"default-rootkey"` | no |
+| <a name="input_ibmcloud_api_key"></a> [ibmcloud\_api\_key](#input\_ibmcloud\_api\_key) | API key belonging to the account in which all the resources are created. | `string` | n/a | yes |
+| <a name="input_kp_instance_id"></a> [kp\_instance\_id](#input\_kp\_instance\_id) | The Id of the Key Protct instance that contains the root key. | `string` | `""` | no |
+| <a name="input_kp_location"></a> [kp\_location](#input\_kp\_location) | The region location of the Key Protect instance. | `string` | `""` | no |
+| <a name="input_kp_name"></a> [kp\_name](#input\_kp\_name) | The name of the Key Protect instance. | `string` | `""` | no |
+| <a name="input_kp_resource_group_id"></a> [kp\_resource\_group\_id](#input\_kp\_resource\_group\_id) | The ID of the resource group. | `string` | `""` | no |
+| <a name="input_prefix"></a> [prefix](#input\_prefix) | Prefix to append to all resources created by this example | `string` | `"core-security-services"` | no |
+| <a name="input_region"></a> [region](#input\_region) | The region used for all resource creation unless a resource specific region is used. | `string` | `"us-south"` | no |
+| <a name="input_resource_group"></a> [resource\_group](#input\_resource\_group) | The name of an existing resource group to provision resources in to. If not set a new resource group will be created using the prefix variable | `string` | `null` | no |
 
 ### Outputs
 
-No outputs.
+| Name | Description |
+|------|-------------|
+| <a name="output_keyprotect_default_rootkey_crn"></a> [keyprotect\_default\_rootkey\_crn](#output\_keyprotect\_default\_rootkey\_crn) | The CRN of the created customer root key in IBM Key Protect |
+| <a name="output_keyprotect_default_rootkey_guid"></a> [keyprotect\_default\_rootkey\_guid](#output\_keyprotect\_default\_rootkey\_guid) | The GUID of the created customer root key in IBM Key Protect |
+| <a name="output_keyprotect_default_rootkey_id"></a> [keyprotect\_default\_rootkey\_id](#output\_keyprotect\_default\_rootkey\_id) | The ID of the created customer root key in IBM Key Protect |
+| <a name="output_keyprotect_instance_id"></a> [keyprotect\_instance\_id](#output\_keyprotect\_instance\_id) | The instance Id of the Key Protect instance. |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
 <!-- Leave this section as is so that your module has a link to local development environment set up steps for contributors to follow -->
