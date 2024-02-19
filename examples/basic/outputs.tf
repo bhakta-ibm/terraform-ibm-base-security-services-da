@@ -2,9 +2,9 @@
 # Outputs
 ########################################################################################################################
 
-output "cos_instance_id" {
-  description = "COS instance id"
-  value       = ibm_resource_instance.cos_instance.id
+output "kp_instance_id" {
+  description = "KP instance id"
+  value       = module.base_security_default_instances.instance_id
 }
 
 output "resource_group_name" {

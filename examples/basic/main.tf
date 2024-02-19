@@ -1,6 +1,6 @@
-########################################################################################################################
+##############################################################################
 # Resource group
-########################################################################################################################
+##############################################################################
 
 module "resource_group" {
   source  = "terraform-ibm-modules/resource-group/ibm"
@@ -10,15 +10,14 @@ module "resource_group" {
   existing_resource_group_name = var.resource_group
 }
 
+
 ########################################################################################################################
-# COS instance
+# Base Security Default Instances
 ########################################################################################################################
 
-resource "ibm_resource_instance" "cos_instance" {
-  name              = "${var.prefix}-cos"
+module "base_security_default_instances" {
+  source            = "../../keyprotect/keyprotect_instance"
   resource_group_id = module.resource_group.resource_group_id
-  service           = "cloud-object-storage"
-  plan              = "standard"
-  location          = "global"
-  tags              = var.resource_tags
+  kp_location = var.region
+  kp_name = "kp-default-instance"
 }
